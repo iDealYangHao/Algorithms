@@ -6,9 +6,10 @@
 using namespace std;
 int main()
 {
-    vector<int> v{3,5,-1,20,-8,3,10};
-    insertSort(v);
+    vector<int> v;
+    generateVec(v);
+    selectionSort(v);
     for(auto i : v)
-        cout << i << endl;
+        cout << i << '\t';
     return 0;
 }
