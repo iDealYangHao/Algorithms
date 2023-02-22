@@ -2,8 +2,8 @@
 // Created by 杨昊 on 2023/2/20.
 //
 
-#ifndef SRC_SORT_H
-#define SRC_SORT_H
+#ifndef SRC_SORT_CPP
+#define SRC_SORT_CPP
 
 #include <vector>
 
@@ -55,4 +55,4 @@ void selectionSort(vector<eType> &vec)
         std::swap(vec[i], vec[minIndex]);
     }
 }
-#endif //SRC_SORT_H
+#endif //SRC_SORT_CPP

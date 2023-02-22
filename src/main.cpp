@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "tools.h"
-#include "Sort.h"
+#include "Sort.cpp"
 
 using namespace std;
 int main()
