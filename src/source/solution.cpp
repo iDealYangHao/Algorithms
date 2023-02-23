@@ -5,8 +5,6 @@
 #include "solution.h"
 #include "Sort.cpp"
 
-#include <vector>
-
 bool existTwoNumber(const int s[], const int size, const int x)
 {
     if (size < 2)
@@ -30,3 +28,56 @@ bool existTwoNumber(const int s[], const int size, const int x)
     }
     return false;
 }
+
+size_t countInversions(vector<int> &vec, size_t left, size_t right)
+{
+    //单个元素无逆序
+    if (left == right)
+        return 0;
+
+    size_t count = 0;
+    size_t midIndex = (left + right) / 2;
+
+    //分别计算两个区间内部的逆序数
+    count += countInversions(vec, left, midIndex);
+    count += countInversions(vec, midIndex + 1, right);
+
+    //然后计算两个区间之间的逆序数
+    count += mergeWithCount(vec, left, midIndex, right);
+    return count;
+}
+
+size_t mergeWithCount(vector<int> &vec, size_t left, size_t mid, size_t right)
+{
+    size_t count = 0;
+
+    //复制前半段到新的vector中，以免在后续赋值时盖住了前半段数据
+    size_t leftLength = mid - left + 1;
+    vector<int> subVec(leftLength);
+    for (size_t i = 0; i < leftLength; ++i)
+        subVec[i] = vec[left + i];
+
+    size_t leftPointer = 0, rightPointer = mid + 1;
+    while (left <= right)
+    {
+        //左区间的数小于右区间的数，这是顺序
+        if (leftPointer < leftLength && (rightPointer > right || subVec[leftPointer] <= vec[rightPointer]))
+            vec[left++] = subVec[leftPointer++];
+        else
+        {
+            /* 计算两个区间之间的逆序数方法核心，因其左右区间各自有序，则如下：
+             * 左区：[3,5,8,9],右区：[2,6,7,10],因 2 < 3, 则2必然小于左区间里3及其之后数，逆序数加4，继续迭代
+             * 左区：[8,9],右区:[6,7,10],因6 < 8,则6小于8和9，逆序数加2，继续迭代
+             * 左区：[8,9],右区:[7,10],因7<8,则7小于8和9，逆序数加2，同理迭代...
+             */
+            if (leftPointer < leftLength)
+                count += leftLength - leftPointer;
+            vec[left++] = vec[rightPointer++];
+        }
+    }
+    return count;
+}
+
+
+
+
