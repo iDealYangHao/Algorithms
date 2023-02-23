@@ -70,9 +70,10 @@ void merge(vector<eType> &vec, int left, int mid, int right)
     int leftIndex = 0, rightIndex = mid + 1;
     for (int i = left; i <= right; ++i)
     {
+        //两种情况可以选择左边的元素
         if (leftIndex<leftLength && (rightIndex > right || subVec[leftIndex] <= vec[rightIndex]))
             vec[i] = subVec[leftIndex++];
-        else
+        else  //不检查rightIndex是因为for循环隐式地保证了它的合法访问
             vec[i] = vec[rightIndex++];
     }
 }
@@ -115,5 +116,27 @@ void insertionSort_recursive(vector<eType> &vec, int index)
 
     insertionSort_recursive(vec, index - 1);//递归使A[0...n-1]有序
     insert(vec, index);//将A[n]插入有序的A[0...n-1]，使有序序列扩大到A[0...n]
+}
+
+template <typename eType>
+void bubbleSort(vector<eType> &vec)
+{
+    if (vec.size() < 2)
+        return;
+
+    bool isSorted = false;  //可以提前退出的标志变量
+    size_t unsortedLength = vec.size();
+    while (!isSorted)
+    {
+        isSorted = true;
+        //i从1开始，比较vec[i-1]和vec[i],可以保证访问的元素不越界，
+        for (int i = 1; i < unsortedLength; ++i)
+            if (vec[i - 1] > vec[i])  //此条件保证了冒泡排序的稳定性
+            {
+                std::swap(vec[i - 1], vec[i]);
+                isSorted = false;
+            }
+        --unsortedLength;
+    }
 }
 #endif //SRC_SORT_CPP

@@ -2,21 +2,16 @@
 
 #include "tools.h"
 #include "Sort.cpp"
+#include "solution.h"
 
 using namespace std;
 int main()
 {
     vector<int> v;
     generateVec(v);
-    vector<int> b(v);
+    bubbleSort(v);
 
-    insertionSort(v);
-    for(auto i : v)
-        cout << i << '\t';
-    cout << endl;
-
-    mergeSort(b, 0, b.size() - 1);
-    for(auto i : v)
+    for (auto i : v)
         cout << i << '\t';
     return 0;
 }
