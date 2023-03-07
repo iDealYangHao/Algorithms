@@ -78,6 +78,59 @@ size_t mergeWithCount(vector<int> &vec, size_t left, size_t mid, size_t right)
     return count;
 }
 
+subarray findMaxSubarray(const vector<int> &vec, size_t low, size_t high)
+{
+    //base case:only one element
+    if (low == high)
+        return {low, high, vec[low]};
+
+    //cut the array into two subarray,the maxSubarray may exist in leftSubarray or rightSubarray entirely,
+    //otherwise, the maxSubarray crossing midpoint.
+    size_t mid = (low + high) / 2;
+    auto leftMaxSubarray = findMaxSubarray(vec, low, mid);
+    auto rightMaxSubarray = findMaxSubarray(vec, mid + 1, high);
+    auto crossingMaxSubarray = findCrossingMaxSubarray(vec, low, mid, high);
+
+    //compare three number, return the max one
+    int lMax = (int)get<2>(leftMaxSubarray), rMax = (int)get<2>(rightMaxSubarray), cMax = (int)get<2>(crossingMaxSubarray);
+    if (lMax >= rMax && lMax >= cMax)
+        return leftMaxSubarray;
+    else if(rMax >= lMax && rMax >= cMax)
+        return rightMaxSubarray;
+    else
+        return crossingMaxSubarray;
+}
+
+subarray findCrossingMaxSubarray(const vector<int> &vec, size_t low, size_t mid, size_t high)
+{
+    int leftMaxSum = INT_MIN;
+    int sum = 0;
+    size_t leftMaxIndex = mid;
+    for (int i = (int)mid; i >= (int)low; --i)
+    {
+        sum += vec.at(i);
+        if (sum > leftMaxSum)
+        {
+            leftMaxSum = sum;
+            leftMaxIndex = i;
+        }
+    }
+
+    sum = 0;
+    size_t rightMaxIndex = mid + 1;
+    int rightMaxSum = INT_MIN;
+    for (int i = (int)mid + 1; i <= (int)high; ++i)
+    {
+        sum += vec.at(i);
+        if (sum > rightMaxSum)
+        {
+            rightMaxSum = sum;
+            rightMaxIndex = i;
+        }
+    }
+    return {leftMaxIndex, rightMaxIndex, leftMaxSum + rightMaxSum};
+}
+
 
 
 

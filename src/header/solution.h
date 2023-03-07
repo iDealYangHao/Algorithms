@@ -6,12 +6,18 @@
 #define SRC_SOLUTION_H
 
 #include <vector>
+#include <tuple>
+
 using std::vector;
+using std::tuple;
+using std::get;
+
+typedef tuple<size_t, size_t, int> subarray;
 /*
  * 给定整型数组S[]和整数x，在O(nlgn)内找到S中是否存在两个数，
  * 使得s[i]+s[j] == x,且i != j
  */
-bool existTwoNumber(const int s[], const int size, const int x);
+bool existTwoNumber(int s[], int size, int x);
 
 /*
  * Let A[n] is an array of n distinct integers, find the number of inversions.
@@ -20,4 +26,12 @@ bool existTwoNumber(const int s[], const int size, const int x);
 size_t countInversions(vector<int> &vec, size_t left, size_t right);
 size_t mergeWithCount(vector<int> &vec, size_t left, size_t mid, size_t right);
 
+/*
+ * Find the maximum subarray int A[n],such as:
+ *{13 –3–25 20 –3– 16–23 18 20 –7 12 –5 –22 15 –4 7}
+ *--------------------->|18 20 -7 12|<--------------sum is 43
+ * any other subarray sum less than it
+ */
+subarray findMaxSubarray(const vector<int> &vec, size_t low, size_t high);
+subarray findCrossingMaxSubarray(const vector<int> &vec, size_t low, size_t mid, size_t high);
 #endif //SRC_SOLUTION_H
