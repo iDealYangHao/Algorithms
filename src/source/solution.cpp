@@ -78,7 +78,7 @@ size_t mergeWithCount(vector<int> &vec, size_t left, size_t mid, size_t right)
     return count;
 }
 
-subarray findMaxSubarray(const vector<int> &vec, size_t low, size_t high)
+subarray findMaxSubarrayDivideConquer(const vector<int> &vec, size_t low, size_t high)
 {
     //base case:only one element
     if (low == high)
@@ -87,8 +87,8 @@ subarray findMaxSubarray(const vector<int> &vec, size_t low, size_t high)
     //cut the array into two subarray,the maxSubarray may exist in leftSubarray or rightSubarray entirely,
     //otherwise, the maxSubarray crossing midpoint.
     size_t mid = (low + high) / 2;
-    auto leftMaxSubarray = findMaxSubarray(vec, low, mid);
-    auto rightMaxSubarray = findMaxSubarray(vec, mid + 1, high);
+    auto leftMaxSubarray = findMaxSubarrayDivideConquer(vec, low, mid);
+    auto rightMaxSubarray = findMaxSubarrayDivideConquer(vec, mid + 1, high);
     auto crossingMaxSubarray = findCrossingMaxSubarray(vec, low, mid, high);
 
     //compare three number, return the max one
@@ -129,6 +129,57 @@ subarray findCrossingMaxSubarray(const vector<int> &vec, size_t low, size_t mid,
         }
     }
     return {leftMaxIndex, rightMaxIndex, leftMaxSum + rightMaxSum};
+}
+
+subarray findMaxSubarrayKadane(const vector<int> &vec, int low, int high)
+{
+    int leftBorder, rightBorder;
+    int max = INT_MIN;
+    int sum = 0;
+    int potentialLeftBorder = low;
+
+    for (int i = low; i <= high; ++i)
+    {
+        sum += vec[i];
+        //sum > max means that:a new king comes out,and it accumulates from potentialLeftBorder to i
+        //potentialLeftBorder means although the sum less than max, it may excel max with new element joining
+        //so ,when it occurs,we need to make the new king become real king,such as:
+        //10 -1 -3 2 7,old king is 10,when it comes at 7,the new king is 15
+        if (sum > max)
+        {
+            leftBorder = potentialLeftBorder;
+            rightBorder = i;
+            max = sum;
+        }
+
+        //sum < 0 means we have to give up all elements before i(include i) if we want a new king.
+        //so,we need to update the beginning of potential new king,and reset its sum.
+        //but it's just a potential king,so we must keep the old king,needn't update old king
+        //such:10 -2 -9 1 3 -1...,when it comes at -9,if there is a new king ,it must begin at 1
+        if (sum < 0)
+        {
+            potentialLeftBorder = i + 1;
+            sum  = 0;
+        }
+    }
+    return {leftBorder, rightBorder, max};
+}
+
+//compare with the Kadane algorithm,it uses O(n) space,so Kadane wins
+int findMaxSubarrayDP(const vector<int> &vec)
+{
+    int maxArray = vec[0];
+
+    //maxSum[i] means that the maximum subarray sum ended with vec[i]
+    //obviously, each ended vec[i] has its own max subarray,we find the max of max in a serials of max
+    vector<int> maxSum(vec.size());
+    maxSum[0] = vec[0];
+    for (int i = 1; i <= (int)vec.size() - 1; ++i)
+    {
+        maxSum[i] = std::max(maxSum[i - 1] + vec[i], vec[i]);
+        maxArray = std::max(maxArray, maxSum[i]);
+    }
+    return maxArray;
 }
 
 

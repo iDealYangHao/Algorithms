@@ -27,11 +27,22 @@ size_t countInversions(vector<int> &vec, size_t left, size_t right);
 size_t mergeWithCount(vector<int> &vec, size_t left, size_t mid, size_t right);
 
 /*
- * Find the maximum subarray int A[n],such as:
+ * Find the maximum subarray in A[n],such as:
  *{13 –3–25 20 –3– 16–23 18 20 –7 12 –5 –22 15 –4 7}
  *--------------------->|18 20 -7 12|<--------------sum is 43
- * any other subarray sum less than it
+ * any other subarray sum less than it.
+ * T(n) = O(nlogn)
  */
-subarray findMaxSubarray(const vector<int> &vec, size_t low, size_t high);
+subarray findMaxSubarrayDivideConquer(const vector<int> &vec, size_t low, size_t high);
 subarray findCrossingMaxSubarray(const vector<int> &vec, size_t low, size_t mid, size_t high);
+
+/*
+ * Find the maximum subarray in A[n] within O(n),called Kadane's algorithm
+ */
+subarray findMaxSubarrayKadane(const vector<int> &vec, int low, int high);
+
+/*
+ * Find the maximum subarray in A[n] within O(n),using dynamic programming
+ */
+int findMaxSubarrayDP(const vector<int> &vec);
 #endif //SRC_SOLUTION_H
